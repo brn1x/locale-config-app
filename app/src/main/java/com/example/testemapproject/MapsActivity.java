@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -56,6 +57,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     /* Variaveis */
     private GoogleMap mMap;
     private Location currentLocation;
+    private LatLng markerLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
     /* Constants */
@@ -66,6 +68,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     /* Widgets */
     private EditText mSearchText;
     private ImageView mLocationIcon;
+    private Button mSelectBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         mSearchText = (EditText) findViewById(R.id.input_search);
         mLocationIcon = (ImageView) findViewById(R.id.ic_location);
+        mSelectBtn = (Button) findViewById(R.id.select_btn);
+
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
@@ -142,10 +147,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .fillColor(Color.argb(70, 50, 50, 150));
 
             mMap.clear();
-            mMap.addMarker(new MarkerOptions().position(position).draggable(true)).setTitle("Localização Escolhida");
+            mMap.addMarker(new MarkerOptions().position(position).draggable(true)).setTitle(address.getAddressLine(0));
             mMap.addCircle(mCircle);
             moveCamera(position, DEFAULT_ZOOM);
             checkCirclesRadius(mCircle);
+            markerLocation = position;
         }
     }
 
@@ -280,9 +286,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             .fillColor(Color.argb(70, 50, 50, 150));
                     mMap.addMarker(new MarkerOptions().position(position).draggable(true)).setTitle("Localização Escolhida");
                     mMap.addCircle(mCircle);
+                    markerLocation = position;
                     moveCamera(position, DEFAULT_ZOOM);
 
                     checkCirclesRadius(mCircle);
+                }
+            });
+
+            mSelectBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(markerLocation != null) {
+                        Intent intent = new Intent(MapsActivity.this, ConfigActivity.class);
+                        intent.putExtra("longitude", markerLocation.longitude);
+                        intent.putExtra("latitude", markerLocation.latitude);
+                        MapsActivity.this.startActivity(intent);
+                    } else {
+                        Toast.makeText(MapsActivity.this, "Selecione uma localização", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
