@@ -320,7 +320,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Location.distanceBetween( location.getLatitude(), location.getLongitude(),
                         circleOptions.getCenter().latitude, circleOptions.getCenter().longitude, distance);
 
-                if( distance[0] > circleOptions.getRadius()  ){
+                if( distance[0] < circleOptions.getRadius()  ){
+                    // efetuar as configurações de posicionamento(Verificar se está dentro do circulo e disparar configs)
                     Toast.makeText(getBaseContext(), "Outside, distance from center: " + distance[0] + " radius: " + circleOptions.getRadius(), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getBaseContext(), "Inside, distance from center: " + distance[0] + " radius: " + circleOptions.getRadius() , Toast.LENGTH_LONG).show();
