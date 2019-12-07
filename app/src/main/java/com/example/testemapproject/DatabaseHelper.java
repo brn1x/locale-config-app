@@ -1,6 +1,7 @@
 package com.example.testemapproject;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -43,6 +44,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public boolean addData(String configName, Double lat, Double longi,
+                           int zoom, int wifi, int media, int ring, int alarm){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COL1, configName);
+        contentValues.put(COL2, lat);
+        contentValues.put(COL3, longi);
+        contentValues.put(COL4, zoom);
+        contentValues.put(COL5, wifi);
+        contentValues.put(COL6, media);
+        contentValues.put(COL7, ring);
+        contentValues.put(COL8, alarm);
+
+        long result = db.insert(TABLE_NAME,null, contentValues);
+
+        if (result == -1){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     public Cursor getData(){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
@@ -50,7 +73,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return data;
     }
     /*TODO
-     addData()
      getConfig()
      updateConfig()
      deleteConfig()

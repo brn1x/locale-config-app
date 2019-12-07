@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">TesteMapProject</string>
+    <string name="app_name">Locale Config</string>
     <string name="title_activity_maps">Map</string>
+    <string name="new_config">New Configuration</string>
 </resources>

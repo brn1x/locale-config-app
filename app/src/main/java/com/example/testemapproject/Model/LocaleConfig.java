@@ -1,5 +1,7 @@
 package com.example.testemapproject.Model;
 
+import androidx.annotation.NonNull;
+
 public class LocaleConfig {
     private int id;
     private String configName;
@@ -23,6 +25,12 @@ public class LocaleConfig {
         this.ring = ring;
         this.alarm = alarm;
 
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return configName;
     }
 
     public int getId() {return id;}

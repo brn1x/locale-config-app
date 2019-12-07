@@ -53,6 +53,7 @@ import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback,
         GoogleApiClient.OnConnectionFailedListener {
+    //private static final String TAG = "MapsActivity";
 
     /* Variaveis */
     private GoogleMap mMap;

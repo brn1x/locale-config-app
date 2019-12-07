@@ -1,7 +1,9 @@
 package com.example.testemapproject;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.testemapproject.Model.LocaleConfig;
 
@@ -30,12 +33,14 @@ public class MainActivity extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
 
         loadListData();
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.app_name);
     }
 
     private void loadListData(){
 
-        Cursor listData = dbHelper.getData();
-        List<LocaleConfig> listConfigs = new ArrayList<>();
+        final Cursor listData = dbHelper.getData();
+        final List<LocaleConfig> listConfigs = new ArrayList<>();
         while (listData.moveToNext()){
             listConfigs.add(new LocaleConfig(
                 listData.getInt(0),
@@ -49,14 +54,35 @@ public class MainActivity extends AppCompatActivity {
                     listData.getInt(8)
             ));
         }
-        final ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listConfigs)
+        final ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listConfigs);
         configList.setAdapter(adapter);
 
         configList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //String name = adapterView.get
+                callEditScreen(listConfigs.get(i));
             }
         });
+    }
+    /*
+       customizable toast
+       @param message
+   */
+    private void toastMessage(String message){
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void callEditScreen(LocaleConfig lc){
+        Intent intent = new Intent(MainActivity.this, EditConfigActivity.class);
+        intent.putExtra("id", lc.getId());
+        intent.putExtra("cName", lc.getConfigName());
+        intent.putExtra("lat", lc.getLat());
+        intent.putExtra("longi", lc.getLongi());
+        intent.putExtra("zoom", lc.getZoom());
+        intent.putExtra("wifi", lc.getWifi());
+        intent.putExtra("media", lc.getMedia());
+        intent.putExtra("ring", lc.getRing());
+        intent.putExtra("alarm", lc.getAlarm());
+        startActivity(intent);
     }
 }
