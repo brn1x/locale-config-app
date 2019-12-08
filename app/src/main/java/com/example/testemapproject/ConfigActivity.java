@@ -20,9 +20,7 @@ public class ConfigActivity extends AppCompatActivity {
 
     private EditText configName;
     private Switch wifiSwitch;
-    private SeekBar sbMedia;
-    private SeekBar sbRing;
-    private SeekBar sbAlarm;
+    private SeekBar sbMedia, sbRing, sbAlarm;
     private Button btnSave;
 
 
@@ -36,6 +34,8 @@ public class ConfigActivity extends AppCompatActivity {
         sbRing = (SeekBar) findViewById(R.id.sb_ring);
         sbAlarm = (SeekBar) findViewById(R.id.sb_alarm);
         btnSave = (Button) findViewById(R.id.btnSave);
+
+        getSupportActionBar().setTitle(R.string.new_config);
 
         /*Intent intent = getIntent();
 
@@ -57,11 +57,10 @@ public class ConfigActivity extends AppCompatActivity {
                     int ring = sbRing.getProgress();
                     int alarm = sbAlarm.getProgress();
                     addData(cName, latitude, longitude, zoom, wifi, media, ring, alarm);
-                    clearData();
                     Intent intentBack = new Intent(ConfigActivity.this, MainActivity.class);
                     startActivity(intentBack);
                 }else{
-                    configName.setError("Name Required");
+                    configName.setError("Insira um nome para configuração!");
                 }
             }
         });
@@ -80,13 +79,6 @@ public class ConfigActivity extends AppCompatActivity {
         }
     }
 
-    public void clearData(){
-        configName.setText("");
-        wifiSwitch.setChecked(false);
-        sbMedia.setProgress(0);
-        sbRing.setProgress(0);
-        sbAlarm.setProgress(0);
-    }
     /*
         customizable toast
         @param message
@@ -95,4 +87,11 @@ public class ConfigActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 
+    /*public void clearData(){
+        configName.setText("");
+        wifiSwitch.setChecked(false);
+        sbMedia.setProgress(0);
+        sbRing.setProgress(0);
+        sbAlarm.setProgress(0);
+    }*/
 }

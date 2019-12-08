@@ -44,8 +44,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    /*
+      Insert a new configuration data to the database
+      @param id
+      @param configName
+      @param lat
+      @param longi
+      @param zoom
+      @param wifi
+      @param media
+      @param ring
+      @param alarm
+    */
     public boolean addData(String configName, Double lat, Double longi,
                            int zoom, int wifi, int media, int ring, int alarm){
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL1, configName);
@@ -66,15 +79,58 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /*
+      Returns all configurations from the database
+      @return
+    */
     public Cursor getData(){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
         Cursor data = db.rawQuery(query, null);
         return data;
     }
-    /*TODO
-     getConfig()
-     updateConfig()
-     deleteConfig()
+
+    /*
+      Update configuration with new information
+      @param id
+      @param oldConfigName
+      @param newConfigName
+      @param lat
+      @param longi
+      @param zoom
+      @param wifi
+      @param media
+      @param ring
+      @param alarm
     */
+    public void updateConfig(int id, String oldConfigName, String newConfigName, Double lat, Double longi,
+                             int zoom, int wifi, int media, int ring, int alarm){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_NAME + " SET "
+                + COL1 + " = '" + newConfigName + "', "
+                + COL2 + " = '" + lat + "', "
+                + COL3 + " = '" + longi + "', "
+                + COL4 + " = '" + zoom + "', "
+                + COL5 + " = '" + wifi + "', "
+                + COL6 + " = '" + media + "', "
+                + COL7 + " = '" + ring + "', "
+                + COL8 + " = '" + alarm + "'"
+                + " WHERE " + COL0 + " = '" + id + "'"
+                + " AND " + COL1 + " = '" + oldConfigName + "'";
+        db.execSQL(query);
+    }
+    /*
+      Delete configuration from database
+      @param id
+      @param configName
+    */
+    public void deleteConfig(int id, String configName){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "DELETE FROM " + TABLE_NAME + " WHERE "
+                + COL0 + " = '" + id + "'" +
+                " AND " + COL1 + " = '" + configName + "'";
+        db.execSQL(query);
+
+    }
 }
