@@ -37,14 +37,14 @@ public class ConfigActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle(R.string.new_config);
 
-        /*Intent intent = getIntent();
+        Intent intent = getIntent();
 
-        Double longitude = intent.getDoubleExtra("longitude", 0);
-        Double latitude = intent.getDoubleExtra("latitude", 0);*/
+        final Double longitude = intent.getDoubleExtra("longitude", 0);
+        final Double latitude = intent.getDoubleExtra("latitude", 0);
 
-        final Double longitude = Double.valueOf(0);
-        final Double latitude  = Double.valueOf(0);
-        final int zoom = 0;
+//        final Double longitude = Double.valueOf(0);
+//        final Double latitude  = Double.valueOf(0);
+        final int zoom = 14;
 
 
         btnSave.setOnClickListener(new View.OnClickListener() {
@@ -59,6 +59,7 @@ public class ConfigActivity extends AppCompatActivity {
                     addData(cName, latitude, longitude, zoom, wifi, media, ring, alarm);
                     Intent intentBack = new Intent(ConfigActivity.this, MainActivity.class);
                     startActivity(intentBack);
+                    Toast.makeText(ConfigActivity.this, ""+latitude+"\n"+longitude, Toast.LENGTH_SHORT).show();
                 }else{
                     configName.setError("Insira um nome para configuração!");
                 }

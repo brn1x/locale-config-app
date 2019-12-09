@@ -47,10 +47,10 @@ public class EditConfigActivity extends AppCompatActivity {
         final Double iLat = receivedIntent.getDoubleExtra("lat", 0);
         final Double iLongi = receivedIntent.getDoubleExtra("longi", 0);
         final int iZoom = receivedIntent.getIntExtra("zoom", 0);
-        int iWifi = receivedIntent.getIntExtra("wifi",0);
-        int iMedia = receivedIntent.getIntExtra("media",0);
-        int iRing = receivedIntent.getIntExtra("ring",0);
-        int iAlarm = receivedIntent.getIntExtra("alarm",0);
+        final int iWifi = receivedIntent.getIntExtra("wifi",0);
+        final int iMedia = receivedIntent.getIntExtra("media",0);
+        final int iRing = receivedIntent.getIntExtra("ring",0);
+        final int iAlarm = receivedIntent.getIntExtra("alarm",0);
 
         configName.setText(iCName);
         wifiSwitch.setChecked(iWifi==1? true : false);
@@ -64,7 +64,15 @@ public class EditConfigActivity extends AppCompatActivity {
         btnEditLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toastMessage("Open Location activity with LAT | LONGI | ZOOM values");
+                Intent intent = new Intent(EditConfigActivity.this, MapsActivity.class);
+                intent.putExtra("lat", iLat);
+                intent.putExtra("longi", iLongi);
+                intent.putExtra("zoom", iZoom);
+                intent.putExtra("wifi", iWifi);
+                intent.putExtra("media", iMedia);
+                intent.putExtra("ring", iRing);
+                intent.putExtra("alarm", iAlarm);
+                startActivity(intent);
             }
         });
 

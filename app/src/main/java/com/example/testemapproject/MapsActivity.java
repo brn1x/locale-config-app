@@ -1,5 +1,6 @@
 package com.example.testemapproject;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -66,10 +67,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int PERMISSION_ID = 44;
     private static final int DEFAULT_ZOOM = 16;
 
+    /* Edit Variables */
+    private double editLat = 0;
+    private double editLongi = 0;
+
     /* Widgets */
     private EditText mSearchText;
     private ImageView mLocationIcon;
     private Button mSelectBtn;
+    private ImageView mMarkerIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,10 +85,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mSearchText = (EditText) findViewById(R.id.input_search);
         mLocationIcon = (ImageView) findViewById(R.id.ic_location);
         mSelectBtn = (Button) findViewById(R.id.select_btn);
+        mMarkerIcon = (ImageView) findViewById(R.id.ic_marker);
 
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
+
+        /* Edit content */
+        Intent editIntent = getIntent();
+        editLat = editIntent.getDoubleExtra("lat", 0);
+        editLongi = editIntent.getDoubleExtra("longi", 0);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -114,7 +126,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getLastLocation();
+                if(currentLocation != null){
+                    moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
+                }
+            }
+        });
+
+        mMarkerIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(markerLocation != null) {
+                    moveCamera(markerLocation, DEFAULT_ZOOM);
+                } else {
+                    Toast.makeText(MapsActivity.this, "Selecione uma localização", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -275,6 +300,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             init();
 
+            if (editLat != 0 && editLongi != 0) {
+                LatLng editLatLng = new LatLng(editLat, editLongi);
+                CircleOptions mCircle = new CircleOptions()
+                        .center(editLatLng)
+                        .radius(50)
+                        .strokeWidth(3f)
+                        .strokeColor(Color.BLUE)
+                        .fillColor(Color.argb(70, 50, 50, 150));
+                mMap.addMarker(new MarkerOptions().position(editLatLng).draggable(true)).setTitle("Localização Escolhida");
+                mMap.addCircle(mCircle);
+                markerLocation = editLatLng;
+                moveCamera(editLatLng, DEFAULT_ZOOM);
+            }
+
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng position) {
@@ -297,13 +336,17 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mSelectBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(markerLocation != null) {
-                        Intent intent = new Intent(MapsActivity.this, ConfigActivity.class);
-                        intent.putExtra("longitude", markerLocation.longitude);
-                        intent.putExtra("latitude", markerLocation.latitude);
-                        MapsActivity.this.startActivity(intent);
+                    if(editLat == 0) {
+                        if(markerLocation != null) {
+                            Intent intent = new Intent(MapsActivity.this, ConfigActivity.class);
+                            intent.putExtra("longitude", markerLocation.longitude);
+                            intent.putExtra("latitude", markerLocation.latitude);
+                            MapsActivity.this.startActivity(intent);
+                        } else {
+                            Toast.makeText(MapsActivity.this, "Selecione uma localização", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(MapsActivity.this, "Selecione uma localização", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapsActivity.this, "Teste", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -321,11 +364,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Location.distanceBetween( location.getLatitude(), location.getLongitude(),
                         circleOptions.getCenter().latitude, circleOptions.getCenter().longitude, distance);
 
-                if( distance[0] < circleOptions.getRadius()  ){
+                if(distance[0] < circleOptions.getRadius()){
                     // efetuar as configurações de posicionamento(Verificar se está dentro do circulo e disparar configs)
-                    Toast.makeText(getBaseContext(), "Outside, distance from center: " + distance[0] + " radius: " + circleOptions.getRadius(), Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getBaseContext(), "Inside, distance from center: " + distance[0] + " radius: " + circleOptions.getRadius() , Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), "Inside, distance from center: " + distance[0] + " radius: " + circleOptions.getRadius(), Toast.LENGTH_LONG).show();
                 }
             }
         });
