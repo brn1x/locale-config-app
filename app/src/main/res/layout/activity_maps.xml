@@ -69,7 +69,7 @@
         android:layout_marginTop="500dp"
         android:text="Selecionar"
         android:textStyle="bold"
-        android:layout_marginBottom="65dp"
+        android:layout_marginBottom="25dp"
         android:layout_alignParentBottom="true"
         />
 

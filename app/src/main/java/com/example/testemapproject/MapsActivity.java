@@ -58,7 +58,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /* Variaveis */
     private GoogleMap mMap;
-    private Location currentLocation;
+    private static Location currentLocation;
     private LatLng markerLocation;
     private FusedLocationProviderClient fusedLocationProviderClient;
 
@@ -91,10 +91,25 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    try {
+                        Thread.sleep(30000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    getLastLocation();
+                }
+            }
+        }).start();
+
         /* Edit content */
         Intent editIntent = getIntent();
         editLat = editIntent.getDoubleExtra("lat", 0);
         editLongi = editIntent.getDoubleExtra("longi", 0);
+
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -127,6 +142,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 if(currentLocation != null){
+//                    getLastLocation();
                     moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()), DEFAULT_ZOOM);
                 }
             }
@@ -189,7 +205,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     /* Pega a ultima localização se as permissões de GPS/Localização estiver corretas */
     @SuppressLint("MissingPermission")
-    private void getLastLocation() {
+    public void getLastLocation() {
+        System.out.println("GetLastLocation");
         if(checkPermissions()) {
             if(isLocationEnabled()) {
                 fusedLocationProviderClient.getLastLocation().addOnCompleteListener(
@@ -201,8 +218,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     requestNewLocationData();
                                 } else {
                                     currentLocation = location;
-                                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-                                    supportMapFragment.getMapAsync(MapsActivity.this);
+//                                    SupportMapFragment supportMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+//                                    supportMapFragment.getMapAsync(MapsActivity.this);
                                 }
                             }
                         }
@@ -361,7 +378,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             public void onMyLocationChange(Location location) {
                 float[] distance = new float[2];
 
-                Location.distanceBetween( location.getLatitude(), location.getLongitude(),
+                Location.distanceBetween(location.getLatitude(), location.getLongitude(),
                         circleOptions.getCenter().latitude, circleOptions.getCenter().longitude, distance);
 
                 if(distance[0] < circleOptions.getRadius()){
@@ -375,5 +392,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     /* Esconde o teclado */
     private void hideKeyboard() {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+    }
+
+    public static Location getCurrentLocation(){
+        return currentLocation;
     }
 }
