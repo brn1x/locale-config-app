@@ -60,9 +60,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener {
     //private static final String TAG = "MapsActivity";
 
-    /* Database Helper*/
-    DatabaseHelper dbHelper;
-
     /* Variaveis */
     private GoogleMap mMap;
     private static Location currentLocation;
@@ -84,18 +81,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button mSelectBtn;
     private ImageView mMarkerIcon;
 
-    /* System Managers */
-    private WifiManager mWifiManager;
-    private AudioManager mAudioManager;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-
-        /* Database Helper*/
-        dbHelper = new DatabaseHelper(this);
 
         mSearchText = (EditText) findViewById(R.id.input_search);
         mLocationIcon = (ImageView) findViewById(R.id.ic_location);
@@ -123,10 +112,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent editIntent = getIntent();
         editLat = editIntent.getDoubleExtra("lat", 0);
         editLongi = editIntent.getDoubleExtra("longi", 0);
-
-        /* System Managers */
-        mWifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -399,7 +384,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         circleOptions.getCenter().latitude, circleOptions.getCenter().longitude, distance);
 
                 if(distance[0] < circleOptions.getRadius()){
-
                     // efetuar as configurações de posicionamento(Verificar se está dentro do circulo e disparar configs)
                     Toast.makeText(getBaseContext(), "Inside, distance from center: " + distance[0] + " radius: " + circleOptions.getRadius(), Toast.LENGTH_LONG).show();
 
