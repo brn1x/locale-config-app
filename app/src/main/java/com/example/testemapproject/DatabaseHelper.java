@@ -7,6 +7,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.example.testemapproject.Model.LocaleConfig;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     //private static final String TAG = "DatabaseHelper";
 
@@ -83,11 +88,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
       Returns all configurations from the database
       @return
     */
-    public Cursor getData(){
+    public List<LocaleConfig> getData(){
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_NAME;
         Cursor data = db.rawQuery(query, null);
-        return data;
+        List<LocaleConfig> listConfig = new ArrayList<>();
+        while (data.moveToNext()){
+            listConfig.add(new LocaleConfig(
+                    data.getInt(0),
+                    data.getString(1),
+                    data.getDouble(2),
+                    data.getDouble(3),
+                    data.getInt(4),
+                    data.getInt(5),
+                    data.getInt(6),
+                    data.getInt(7),
+                    data.getInt(8)
+            ));
+        }
+        return listConfig;
     }
 
     /*

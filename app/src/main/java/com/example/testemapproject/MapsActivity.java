@@ -10,11 +10,14 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.media.AudioManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Looper;
 import android.provider.Settings;
@@ -31,6 +34,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.testemapproject.Model.LocaleConfig;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -56,6 +60,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         GoogleApiClient.OnConnectionFailedListener {
     //private static final String TAG = "MapsActivity";
 
+    /* Database Helper*/
+    DatabaseHelper dbHelper;
+
     /* Variaveis */
     private GoogleMap mMap;
     private Location currentLocation;
@@ -77,16 +84,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Button mSelectBtn;
     private ImageView mMarkerIcon;
 
+    /* System Managers */
+    private WifiManager mWifiManager;
+    private AudioManager mAudioManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
+        /* Database Helper*/
+        dbHelper = new DatabaseHelper(this);
+
         mSearchText = (EditText) findViewById(R.id.input_search);
         mLocationIcon = (ImageView) findViewById(R.id.ic_location);
         mSelectBtn = (Button) findViewById(R.id.select_btn);
         mMarkerIcon = (ImageView) findViewById(R.id.ic_marker);
-
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
@@ -95,6 +109,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Intent editIntent = getIntent();
         editLat = editIntent.getDoubleExtra("lat", 0);
         editLongi = editIntent.getDoubleExtra("longi", 0);
+
+        /* System Managers */
+        mWifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -365,8 +383,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         circleOptions.getCenter().latitude, circleOptions.getCenter().longitude, distance);
 
                 if(distance[0] < circleOptions.getRadius()){
+
                     // efetuar as configurações de posicionamento(Verificar se está dentro do circulo e disparar configs)
                     Toast.makeText(getBaseContext(), "Inside, distance from center: " + distance[0] + " radius: " + circleOptions.getRadius(), Toast.LENGTH_LONG).show();
+
                 }
             }
         });

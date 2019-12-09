@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadListData() {
 
-        final Cursor listData = dbHelper.getData();
-        final List<LocaleConfig> listConfigs = new ArrayList<>();
+        final List<LocaleConfig> listData = dbHelper.getData();
+        /*final List<LocaleConfig> listConfigs = new ArrayList<>();
         while (listData.moveToNext()) {
             listConfigs.add(new LocaleConfig(
                     listData.getInt(0),
@@ -55,14 +55,14 @@ public class MainActivity extends AppCompatActivity {
                     listData.getInt(7),
                     listData.getInt(8)
             ));
-        }
-        final ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listConfigs);
+        }*/
+        final ListAdapter adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listData);
         configList.setAdapter(adapter);
 
         configList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                callEditScreen(listConfigs.get(i));
+                callEditScreen(listData.get(i));
             }
         });
     }
