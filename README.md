@@ -1,4 +1,4 @@
 # Locale Config Mobile APP
 
 
-A mobile APP developep by FAESP Students Bruno Almeida and Rafael dos Santos
+A mobile APP developed by FAESP Students Bruno Almeida and Rafael Santos
