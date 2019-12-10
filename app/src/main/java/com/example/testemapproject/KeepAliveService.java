@@ -84,7 +84,7 @@ public class KeepAliveService extends Service {
         startForeground(NOTIF_ID, new NotificationCompat.Builder(this,
                 NOTIF_CHANNEL_ID) // don't forget create a notification channel first
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText("App rodando em plano de fundo!")
                 .setContentIntent(pendingIntent)
@@ -106,31 +106,29 @@ public class KeepAliveService extends Service {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                listData = dbHelper.getData();
                 Location lctn = MapsActivity.getCurrentLocation();
                 if(lctn != null){
                     System.out.println("TESTE");
                     System.out.println("Location"+lctn.getLatitude());
-                }
-
-                if (listData.size() != 0){
-                    for (LocaleConfig lc : listData) {
-                        CircleOptions circleOptions = new CircleOptions()
-                            .center(new LatLng(lc.getLat(), lc.getLongi()))
-                                .radius(50)
-                                .strokeWidth(3f);
-                        float[] distance = new float[2];
-                        Location.distanceBetween(lctn.getLatitude(), lctn.getLongitude(), circleOptions.getCenter().latitude, circleOptions.getCenter().longitude, distance);
-                        if(distance[0] < circleOptions.getRadius()){
-                            mAudioManager.setStreamVolume(mAudioManager.STREAM_MUSIC, (int) lc.getMedia(), mAudioManager.FLAG_VIBRATE);
-                            mAudioManager.setStreamVolume(mAudioManager.STREAM_RING, (int) lc.getRing(), mAudioManager.FLAG_VIBRATE);
-                            mAudioManager.setStreamVolume(mAudioManager.STREAM_ALARM, (int) lc.getAlarm(), mAudioManager.FLAG_VIBRATE);
-                            mWifiManager.setWifiEnabled(lc.getWifi()==1? true:false);
+                    if (listData.size() != 0){
+                        System.out.println(listData.size());
+                        for (LocaleConfig lc : listData) {
+                            CircleOptions circleOptions = new CircleOptions()
+                                    .center(new LatLng(lc.getLat(), lc.getLongi()))
+                                    .radius(50)
+                                    .strokeWidth(3f);
+                            float[] distance = new float[2];
+                            Location.distanceBetween(lctn.getLatitude(), lctn.getLongitude(), circleOptions.getCenter().latitude, circleOptions.getCenter().longitude, distance);
+                            if(distance[0] < circleOptions.getRadius()){
+                                mAudioManager.setStreamVolume(mAudioManager.STREAM_MUSIC, (int) lc.getMedia(), mAudioManager.FLAG_VIBRATE);
+                                mAudioManager.setStreamVolume(mAudioManager.STREAM_ALARM, (int) lc.getAlarm(), mAudioManager.FLAG_VIBRATE);
+                                mAudioManager.setStreamVolume(mAudioManager.STREAM_RING, (int) lc.getRing(), mAudioManager.FLAG_VIBRATE);
+                                mWifiManager.setWifiEnabled(lc.getWifi() == 1 ? true : false);
+                            }
                         }
                     }
                 }
-
-
-
             }
         }
     }
