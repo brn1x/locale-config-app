@@ -24,8 +24,9 @@ public class EditConfigActivity extends AppCompatActivity {
     private SeekBar sbMedia, sbRing, sbAlarm;
     private Button btnEditSave, btnEditLocation;
 
-    private int iID;
+    private int iID, iZoom, iWifi, iMedia, iRing, iAlarm;
     private String iCName;
+    private Double iLat, iLongi;
 
 
     @Override
@@ -44,13 +45,13 @@ public class EditConfigActivity extends AppCompatActivity {
         Intent receivedIntent = getIntent();
         iID = receivedIntent.getIntExtra("id", 0);
         iCName = receivedIntent.getStringExtra("cName");
-        final Double iLat = receivedIntent.getDoubleExtra("lat", 0);
-        final Double iLongi = receivedIntent.getDoubleExtra("longi", 0);
-        final int iZoom = receivedIntent.getIntExtra("zoom", 0);
-        final int iWifi = receivedIntent.getIntExtra("wifi",0);
-        final int iMedia = receivedIntent.getIntExtra("media",0);
-        final int iRing = receivedIntent.getIntExtra("ring",0);
-        final int iAlarm = receivedIntent.getIntExtra("alarm",0);
+        iLat = receivedIntent.getDoubleExtra("lat", 0);
+        iLongi = receivedIntent.getDoubleExtra("longi", 0);
+        iZoom = receivedIntent.getIntExtra("zoom", 0);
+        iWifi = receivedIntent.getIntExtra("wifi",0);
+        iMedia = receivedIntent.getIntExtra("media",0);
+        iRing = receivedIntent.getIntExtra("ring",0);
+        iAlarm = receivedIntent.getIntExtra("alarm",0);
 
         configName.setText(iCName);
         wifiSwitch.setChecked(iWifi==1? true : false);
@@ -65,13 +66,15 @@ public class EditConfigActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EditConfigActivity.this, MapsActivity.class);
+                intent.putExtra("id", iID);
+                intent.putExtra("cName", configName.getText().toString());
                 intent.putExtra("lat", iLat);
                 intent.putExtra("longi", iLongi);
                 intent.putExtra("zoom", iZoom);
-                intent.putExtra("wifi", iWifi);
-                intent.putExtra("media", iMedia);
-                intent.putExtra("ring", iRing);
-                intent.putExtra("alarm", iAlarm);
+                intent.putExtra("wifi", wifiSwitch.isChecked()? 1 : 0);
+                intent.putExtra("media", sbMedia.getProgress());
+                intent.putExtra("ring", sbRing.getProgress());
+                intent.putExtra("alarm", sbAlarm.getProgress());
                 startActivity(intent);
             }
         });

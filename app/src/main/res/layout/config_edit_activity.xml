@@ -81,9 +81,9 @@
         android:layout_height="40dp"
         android:layout_below="@id/ed_tv_media"
         android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
         android:layout_marginTop="15dp"
-        />
+        android:layout_marginRight="50dp"
+        android:max="16" />
 
     <TextView
         android:id="@+id/ed_tv_ring"
@@ -104,9 +104,9 @@
         android:layout_height="40dp"
         android:layout_below="@id/ed_tv_ring"
         android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
         android:layout_marginTop="15dp"
-        />
+        android:layout_marginRight="50dp"
+        android:max="8" />
 
     <TextView
         android:id="@+id/ed_tv_alarm"
@@ -127,9 +127,9 @@
         android:layout_height="40dp"
         android:layout_below="@id/ed_tv_alarm"
         android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
         android:layout_marginTop="15dp"
-        />
+        android:layout_marginRight="50dp"
+        android:max="7" />
 
     <Button
         android:id="@+id/ed_btnSaveChanges"

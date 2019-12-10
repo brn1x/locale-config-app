@@ -41,12 +41,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COL7 + " INTERGER,"
                 + COL8 + " INTEGER)";
         db.execSQL(createTable);
+        db.close();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int il){
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
+        db.close();
     }
 
     /*
@@ -77,11 +79,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         long result = db.insert(TABLE_NAME,null, contentValues);
 
+        db.close();
         if (result == -1){
             return false;
         }else{
             return true;
         }
+
     }
 
     /*
@@ -106,6 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     data.getInt(8)
             ));
         }
+        db.close();
         return listConfig;
     }
 
@@ -138,6 +143,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + " WHERE " + COL0 + " = '" + id + "'"
                 + " AND " + COL1 + " = '" + oldConfigName + "'";
         db.execSQL(query);
+        db.close();
     }
     /*
       Delete configuration from database
@@ -150,6 +156,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COL0 + " = '" + id + "'" +
                 " AND " + COL1 + " = '" + configName + "'";
         db.execSQL(query);
-
+        db.close();
     }
 }

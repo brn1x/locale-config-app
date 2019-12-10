@@ -72,6 +72,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final int DEFAULT_ZOOM = 16;
 
     /* Edit Variables */
+    private int actvID = 0, editId, editZoom, editWifi, editMedia, editRing, editAlarm;
+    private String editName;
     private double editLat = 0;
     private double editLongi = 0;
 
@@ -109,9 +111,20 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }).start();
 
         /* Edit content */
-        Intent editIntent = getIntent();
-        editLat = editIntent.getDoubleExtra("lat", 0);
-        editLongi = editIntent.getDoubleExtra("longi", 0);
+        Intent receivedIntent = getIntent();
+        /*actvID = receivedIntent.getIntExtra("actvID", 0);
+        if(actvID == 2){
+
+        }*/
+        editId = receivedIntent.getIntExtra("id", 0);
+        editName = receivedIntent.getStringExtra("cName");
+        editLat = receivedIntent.getDoubleExtra("lat", 0);
+        editLongi = receivedIntent.getDoubleExtra("longi", 0);
+        editZoom = receivedIntent.getIntExtra("zoom", 0);
+        editWifi = receivedIntent.getIntExtra("wifi",0);
+        editMedia = receivedIntent.getIntExtra("media",0);
+        editRing = receivedIntent.getIntExtra("ring",0);
+        editAlarm = receivedIntent.getIntExtra("alarm",0);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -357,15 +370,26 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 public void onClick(View v) {
                     if(editLat == 0) {
                         if(markerLocation != null) {
-                            Intent intent = new Intent(MapsActivity.this, ConfigActivity.class);
-                            intent.putExtra("longitude", markerLocation.longitude);
-                            intent.putExtra("latitude", markerLocation.latitude);
-                            MapsActivity.this.startActivity(intent);
+                            Intent newIntent = new Intent(MapsActivity.this, ConfigActivity.class);
+                            newIntent.putExtra("longitude", markerLocation.longitude);
+                            newIntent.putExtra("latitude", markerLocation.latitude);
+                            /*MapsActivity.this.*/startActivity(newIntent);
                         } else {
                             Toast.makeText(MapsActivity.this, "Selecione uma localização", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Toast.makeText(MapsActivity.this, "Teste", Toast.LENGTH_SHORT).show();
+                        Intent editIntent = new Intent(MapsActivity.this, EditConfigActivity.class);
+                        editIntent.putExtra("id", editId);
+                        editIntent.putExtra("cName", editName);
+                        editIntent.putExtra("lat", markerLocation.latitude);
+                        editIntent.putExtra("longi", markerLocation.longitude);
+                        editIntent.putExtra("zoom", editZoom);
+                        editIntent.putExtra("wifi", editWifi);
+                        editIntent.putExtra("media", editMedia);
+                        editIntent.putExtra("ring", editRing);
+                        editIntent.putExtra("alarm", editAlarm);
+                        /*MapsActivity.this.*/startActivity(editIntent);
+                        //Toast.makeText(MapsActivity.this, "Teste", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
